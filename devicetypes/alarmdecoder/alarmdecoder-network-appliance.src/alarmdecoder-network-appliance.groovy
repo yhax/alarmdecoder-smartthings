@@ -29,6 +29,7 @@ preferences {
         input("panel_type", "enum", title: "Panel Type", description: "Type of panel", options: ["ADEMCO", "DSC"], defaultValue: "ADEMCO", required: true)
     }
     section() {
+        //DO_NOT_DELETE_TEMPLATE_ZONE_NUMBER_START
         input("zonetracker1zone", "number", title: "ZoneTracker Sensor #1", description: "Zone number to associate with this contact sensor.")
         input("zonetracker2zone", "number", title: "ZoneTracker Sensor #2", description: "Zone number to associate with this contact sensor.")
         input("zonetracker3zone", "number", title: "ZoneTracker Sensor #3", description: "Zone number to associate with this contact sensor.")
@@ -41,6 +42,7 @@ preferences {
         input("zonetracker10zone", "number", title: "ZoneTracker Sensor #10", description: "Zone number to associate with this contact sensor.")
         input("zonetracker11zone", "number", title: "ZoneTracker Sensor #11", description: "Zone number to associate with this contact sensor.")
         input("zonetracker12zone", "number", title: "ZoneTracker Sensor #12", description: "Zone number to associate with this contact sensor.")
+        //DO_NOT_DELETE_TEMPLATE_ZONE_NUMBER_END
     }
 }
 
@@ -51,6 +53,7 @@ metadata {
         attribute "panel_state", "enum", ["armed", "armed_stay", "disarmed", "alarming", "fire", "ready", "notready"]
         attribute "armed", "enum", ["armed", "disarmed"]
         attribute "panic_state", "string"
+        //DO_NOT_DELETE_TEMPLATE_ZONE_ATTRIBUTE_START
         attribute "zoneStatus1", "string"
         attribute "zoneStatus2", "string"
         attribute "zoneStatus3", "string"
@@ -63,6 +66,7 @@ metadata {
         attribute "zoneStatus10", "string"
         attribute "zoneStatus11", "string"
         attribute "zoneStatus12", "string"
+        //DO_NOT_DELETE_TEMPLATE_ZONE_ATTRIBUTE_END
 
         command "disarm"
         command "arm_stay"
@@ -78,6 +82,7 @@ metadata {
         command "aux2"
         command "chime"
         command "bypass", ["number"]
+        //DO_NOT_DELETE_TEMPLATE_ZONE_BYPASS_CMD_START
         command "bypass1"
         command "bypass2"
         command "bypass3"
@@ -89,7 +94,8 @@ metadata {
         command "bypass9"
         command "bypass10"
         command "bypass11"
-        command "bypass12"        
+        command "bypass12"
+        //DO_NOT_DELETE_TEMPLATE_ZONE_BYPASS_CMD_END     
     }
 
     simulator {
@@ -147,6 +153,7 @@ metadata {
             state "aux2", icon: "http://www.alarmdecoder.com/st/ad2-aux.png", label: "AUX", nextState: "default", action: "aux", backgroundColor: "#ff4000"
         }
 
+        //DO_NOT_DELETE_TEMPLATE_ZONE_TILE_START
         valueTile("zoneStatus1", "device.zoneStatus1", inactiveLabel: false, width: 1, height: 1) {
             state "default", icon:"", label: '${currentValue}', action: "bypass1", nextState: "default", backgroundColors: [
                 [value: 0, color: "#ffffff"],
@@ -242,20 +249,26 @@ metadata {
                 [value: 99, color: "#ff0000"]
             ]
         }
+        //DO_NOT_DELETE_TEMPLATE_ZONE_TILE_END
 
         standardTile("refresh", "device.refresh", inactiveLabel: false, decoration: "flat", width: 6, height: 2) {
             state "default", action:"refresh.refresh", icon:"st.secondary.refresh"
         }
 
         main(["status"])
+
+        //DO_NOT_DELETE_TEMPLATE_ZONE_DETAILS_START
         details(["status", "arm_disarm", "stay_disarm", "panic", "fire", "aux", "zoneStatus1", "zoneStatus2", "zoneStatus3", "zoneStatus4", "zoneStatus5", "zoneStatus6", "zoneStatus7", "zoneStatus8", "zoneStatus9", "zoneStatus10", "zoneStatus11", "zoneStatus12", "refresh"])
+        //DO_NOT_DELETE_TEMPLATE_ZONE_DETAILS_END
     }
 }
 
 /*** Handlers ***/
 
 def installed() {
+    //DO_NOT_DELETE_TEMPLATE_ZONE_LOOP_START
     for (def i = 1; i <= 12; i++)
+    //DO_NOT_DELETE_TEMPLATE_ZONE_LOOP_END
         sendEvent(name: "zoneStatus${i}", value: "", displayed: false)
 }
 
@@ -285,7 +298,9 @@ def updated() {
     state.fire_started = null;
     state.aux_started = null;
 
+    //DO_NOT_DELETE_TEMPLATE_ZONE_LOOP_START
     for (def i = 1; i <= 12; i++)
+    //DO_NOT_DELETE_TEMPLATE_ZONE_LOOP_END
         sendEvent(name: "zoneStatus${i}", value: "", displayed: false)
 
     // subscribe if settings change
@@ -593,6 +608,7 @@ def checkAux() {
  * bypassN()
  * Bypass the zone indicated on this tile
  */
+ //DO_NOT_DELETE_TEMPLATE_ZONE_BYPASS_DEF_START
 def bypass1() {
     bypassN(1)
 } 
@@ -629,6 +645,7 @@ def bypass11() {
 def bypass12() {
     bypassN(10)
 }
+//DO_NOT_DELETE_TEMPLATE_ZONE_BYPASS_DEF_END
 
 def bypassN(szValue) {
     def zone = device.currentValue("zoneStatus${szValue}")
@@ -848,7 +865,10 @@ private def build_zone_events(data) {
     //log.trace("Filling zone tiles..")
 
     // Fill zone tiles
-    for (def i = 1; i <= 12; i++) {
+    //DO_NOT_DELETE_TEMPLATE_ZONE_LOOP_START
+    for (def i = 1; i <= 12; i++)
+    //DO_NOT_DELETE_TEMPLATE_ZONE_LOOP_END 
+    {       
         if (number_of_zones_faulted > 0 && i <= number_of_zones_faulted) {
             if ((device.currentValue("zoneStatus${i}") ?: "0").toInteger() != current_faults[i-1])
                 events << createEvent(name: "zoneStatus${i}", value: current_faults[i-1], displayed: true)
@@ -870,7 +890,10 @@ private def update_zone_switches(zone, faulted) {
     // Iterate through the zone tracker settings.  If the zone number matches,
     // trigger an event for the service manager to use to flip the virtual
     // switches.
-    for (def i = 1; i <= 12; i++) {
+    //DO_NOT_DELETE_TEMPLATE_ZONE_LOOP_START
+    for (def i = 1; i <= 12; i++)
+    //DO_NOT_DELETE_TEMPLATE_ZONE_LOOP_END
+    {
         if (zone == settings."zonetracker${i}zone") {
             if (faulted)
                 events << createEvent(name: "zone-on", value: i, isStateChange: true, displayed: false)
