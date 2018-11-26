@@ -24,6 +24,7 @@
  * global support
  */
 import groovy.transform.Field
+import groovy.json.JsonSlurperClassic
 
 /*
  * Turn on verbose debugging
@@ -35,6 +36,7 @@ import groovy.transform.Field
  */
 @Field lname = "AlarmDecoder"
 @Field sname = "AD2"
+@Field adApiKey = "UPDATE_ME"
  
 definition(
     name: "AlarmDecoder service",
@@ -493,6 +495,7 @@ def initialize() {
 
     // if a device in the GUI is selected then add it.
     if (input_selected_devices) {
+        log.trace "device in gui selected"
         addExistingDevices()
     }
 
@@ -1076,11 +1079,27 @@ def addExistingDevices() {
             }
             
             // Add virtual zone contact sensors if they do not exist.
-            // asynchronous to avoid timeout. Apps can only run for 20 seconds or it will be killed.
-            for (def i = 0; i < 20; i++)
-            {
-                sendEvent(name: "addZone", value: "${i+1}", data: "${state.ip}:${state.port}:switch${i+1}")
+            def mainDevice = getChildDevice("${state.ip}:${state.port}")
+            if (adApiKey == "UPDATE_ME"){
+                log.error("AD API Key needs to be updated in alarmdecoder-service.groovy from ST website.")
             }
+            else if (mainDevice)
+            {       
+                if (debug) log.debug ">>> mainDevice: ${mainDevice}"
+
+                def result = new physicalgraph.device.HubAction(
+                    method: "GET",
+                    path: "/api/v1/zones?apikey=${adApiKey}",
+                    headers: [
+                            "HOST" : "${mainDevice.getDataValue("urn")}",
+                            "Content-Type": "application/json"],
+                            null,
+                            [callback: parseZoneData]
+                )
+                sendHubCommand(result);
+            }
+            else
+                log.error("Unable to find main device - zone setup incomplete.")
 
             // Add virtual Smoke Alarm sensors if it does not exist.
             def cd = state.devices.find { k, v -> k == "${state.ip}:${state.port}:SmokeAlarm" }
@@ -1175,6 +1194,53 @@ def addExistingDevices() {
     }
 }
 
+/*
+* This gets the response from the AD API for get zones. It adds switches based on
+their st_id (smartthings id). If the st_id is null, you need to log into the AD webapp
+go into settings-> advanced and click generate device handler.
+*/
+def parseZoneData(physicalgraph.device.HubResponse hubResponse) {
+    def json = null 
+    try {
+        json = new groovy.json.JsonSlurperClassic().parseText(hubResponse.body)
+    }
+    catch (e) {
+        log.error(e)
+    }
+
+    if (json)
+    {
+        json.zones.each
+        {
+            z ->
+                if(debug) log.debug("Zone (${z.zone_id}) ST ID: ${z.st_id}")
+
+                if (z.st_id != null && z.st_id > 0){
+                    def existingSwitch = state.devices.find { k, v -> k == "${state.ip}:${state.port}:switch${z.st_id}" }
+
+                    if (!existingSwitch)
+                    {
+                        if(debug) log.debug("Adding ${sname} Zone Sensor #${z.zone_id}")
+
+                        def zoneName =  "${sname} Zone Sensor #${z.zone_id}"
+                        if (z.name?.trim()){
+                            zoneName = z.name
+                        }
+
+                        def zone_switch = addChildDevice("alarmdecoder", "AlarmDecoder virtual contact sensor", "${state.ip}:${state.port}:switch${z.st_id}", state.hub, [name: "${state.ip}:${state.port}:switch${z.st_id}", label: "${zoneName}", completedSetup: true])
+
+                        def sensorValue = "open"
+                        if (settings.defaultSensorToClosed == true)
+                            sensorValue = "closed"
+
+                        // Set default contact state.
+                        zone_switch.sendEvent(name: "contact", value: sensorValue, isStateChange: true, displayed: false)
+                    }
+                }
+        }
+    }
+}
+
 /**
  * Configure subscriptions the virtual devices will send too.
  */
@@ -1235,7 +1301,7 @@ private def parseEventMessage(String description) {
     def event = [:]
     def parts = description.split(',')
     parts.each { part ->
-        part = part.trim()
+        part = part.trim()        
         if (part.startsWith('devicetype:')) {
             def valueString = part.split(":")[1].trim()
             event.devicetype = valueString

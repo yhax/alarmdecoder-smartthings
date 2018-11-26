@@ -93,9 +93,9 @@ Navigate to [https://graph.api.smartthings.com](https://graph.api.smartthings.co
 1. Click on **My Device Handlers**
 2. Click **Settings** (top of page)
 3. Click **Add New Repository** (bottom of dialog)
-4. Enter `nutechsoftware` as the **owner**
+4. Enter `yhax` as the **owner**
 5. Enter `alarmdecoder-smartthings` as the **name**
-6. Enter `master` as the **branch**
+6. Enter `zone.updates` as the **branch**
 7. Click **Save**
 8. Click **Update From Repo** (top of page)
 9. Check the boxes 
@@ -107,16 +107,32 @@ Navigate to [https://graph.api.smartthings.com](https://graph.api.smartthings.co
 10. Check **Publish** (bottom of dialog)
 11. Click **Execute Update**
 
+### Generate device handler file from the AlarmDecoder webapp
+1. Navigate to the advanced section of the webapp on your local network: ([https://alarmdecoder.local/settings/advanced/](https://alarmdecoder.local/settings/advanced/))
+2. Click **Generate Device Handler** (bottom of page)
+3. Open the file the generated file that was created in step 2 (alarmdecoder-network-appliance.groovy)
+4. Copy the entire file
+5. Navigate to [https://graph.api.smartthings.com](https://graph.api.smartthings.com) in your browser and login to your account.
+6. Click on **My Device Handlers**
+7. Click on **alarmdecoder : AlarmDecoder network appliance**
+8. Remove all the code from the editor, and paste the code from step 4.
+9. Click **Save**
+10. Click **Publish** 
+
 ### Install SmartApp (via github integration)
 1. Click on **My SmartApps**
 2. Click **Update From Repo** (top of page)
 3. Check box for `alarmdecoder service`
 4. Check **Publish** (bottom of dialog)
 5. Click **Execute Update**
-6. Select the `alarmdecoder: AlarmDecoder service` smart app and then select your location on the right and press **Set Location**.  (Click the **Simulator** if you don't see these options)
-7. Click the **Discover** button.  You may have to hit refresh to get your device to show up.  If it doesn't show up make sure you're running an up-to-date version of the webapp and that it is on the same netowrk as your SmartThings HUB.
-8. Click **Select Devices** and select your AlarmDecoder.
-9. Click **Install**
+6. Select the `alarmdecoder: AlarmDecoder service` smart app.
+7. On line 39, `UPDATE_ME` with your AlarmDecoder API key, which you can find in the AlarmDecoder webapp - [https://alarmdecoder.local/api/keys](https://alarmdecoder.local/api/keys)) - If you don't already have one skip to the next section for details how to generate one, and then come back to this step.
+8. Click **Save**
+9. Click **Publish** 
+10. Select your location on the right and press **Set Location**.  (Click the **Simulator** if you don't see these options)
+11. Click the **Discover** button.  You may have to hit refresh to get your device to show up.  If it doesn't show up make sure you're running an up-to-date version of the webapp and that it is on the same netowrk as your SmartThings HUB.
+12. Click **Select Devices** and select your AlarmDecoder.
+13. Click **Install**
     * Notes
         1. This will generate new devices under **My Devices**
         2. If you **Uninstall** from **AlarmDecoder service** screen it will attempt to automatically remove all sub devices if they are not in use by SHM or other rules.

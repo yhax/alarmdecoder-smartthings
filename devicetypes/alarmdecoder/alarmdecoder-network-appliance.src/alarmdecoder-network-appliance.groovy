@@ -29,26 +29,7 @@ preferences {
         input("panel_type", "enum", title: "Panel Type", description: "Type of panel", options: ["ADEMCO", "DSC"], defaultValue: "ADEMCO", required: true)
     }
     section() {
-        input("zonetracker1zone", "number", title: "ZoneTracker Sensor #1", description: "Zone number to associate with this contact sensor.")
-        input("zonetracker2zone", "number", title: "ZoneTracker Sensor #2", description: "Zone number to associate with this contact sensor.")
-        input("zonetracker3zone", "number", title: "ZoneTracker Sensor #3", description: "Zone number to associate with this contact sensor.")
-        input("zonetracker4zone", "number", title: "ZoneTracker Sensor #4", description: "Zone number to associate with this contact sensor.")
-        input("zonetracker5zone", "number", title: "ZoneTracker Sensor #5", description: "Zone number to associate with this contact sensor.")
-        input("zonetracker6zone", "number", title: "ZoneTracker Sensor #6", description: "Zone number to associate with this contact sensor.")
-        input("zonetracker7zone", "number", title: "ZoneTracker Sensor #7", description: "Zone number to associate with this contact sensor.")
-        input("zonetracker8zone", "number", title: "ZoneTracker Sensor #8", description: "Zone number to associate with this contact sensor.")
-        input("zonetracker9zone", "number", title: "ZoneTracker Sensor #9", description: "Zone number to associate with this contact sensor.")
-        input("zonetracker10zone", "number", title: "ZoneTracker Sensor #10", description: "Zone number to associate with this contact sensor.")
-        input("zonetracker11zone", "number", title: "ZoneTracker Sensor #11", description: "Zone number to associate with this contact sensor.")
-        input("zonetracker12zone", "number", title: "ZoneTracker Sensor #12", description: "Zone number to associate with this contact sensor.")
-        input("zonetracker13zone", "number", title: "ZoneTracker Sensor #13", description: "Zone number to associate with this contact sensor.")
-        input("zonetracker14zone", "number", title: "ZoneTracker Sensor #14", description: "Zone number to associate with this contact sensor.")
-        input("zonetracker15zone", "number", title: "ZoneTracker Sensor #15", description: "Zone number to associate with this contact sensor.")
-        input("zonetracker16zone", "number", title: "ZoneTracker Sensor #16", description: "Zone number to associate with this contact sensor.")
-        input("zonetracker17zone", "number", title: "ZoneTracker Sensor #17", description: "Zone number to associate with this contact sensor.")
-        input("zonetracker18zone", "number", title: "ZoneTracker Sensor #18", description: "Zone number to associate with this contact sensor.")
-        input("zonetracker19zone", "number", title: "ZoneTracker Sensor #19", description: "Zone number to associate with this contact sensor.")
-        input("zonetracker20zone", "number", title: "ZoneTracker Sensor #20", description: "Zone number to associate with this contact sensor.")
+        //DO_NOT_DELETE_TEMPLATE_ZONE_NUMBERS
     }
 }
 
@@ -59,18 +40,7 @@ metadata {
         attribute "panel_state", "enum", ["armed", "armed_stay", "disarmed", "alarming", "fire", "ready", "notready"]
         attribute "armed", "enum", ["armed", "disarmed"]
         attribute "panic_state", "string"
-        attribute "zoneStatus1", "string"
-        attribute "zoneStatus2", "string"
-        attribute "zoneStatus3", "string"
-        attribute "zoneStatus4", "string"
-        attribute "zoneStatus5", "string"
-        attribute "zoneStatus6", "string"
-        attribute "zoneStatus7", "string"
-        attribute "zoneStatus8", "string"
-        attribute "zoneStatus9", "string"
-        attribute "zoneStatus10", "string"
-        attribute "zoneStatus11", "string"
-        attribute "zoneStatus12", "string"
+        //DO_NOT_DELETE_TEMPLATE_ZONE_ATTRIBUTES
 
         command "disarm"
         command "arm_stay"
@@ -86,18 +56,7 @@ metadata {
         command "aux2"
         command "chime"
         command "bypass", ["number"]
-        command "bypass1"
-        command "bypass2"
-        command "bypass3"
-        command "bypass4"
-        command "bypass5"
-        command "bypass6"
-        command "bypass7"
-        command "bypass8"
-        command "bypass9"
-        command "bypass10"
-        command "bypass11"
-        command "bypass12"        
+        //DO_NOT_DELETE_TEMPLATE_ZONE_BYPASS_CMDS   
     }
 
     simulator {
@@ -155,115 +114,22 @@ metadata {
             state "aux2", icon: "http://www.alarmdecoder.com/st/ad2-aux.png", label: "AUX", nextState: "default", action: "aux", backgroundColor: "#ff4000"
         }
 
-        valueTile("zoneStatus1", "device.zoneStatus1", inactiveLabel: false, width: 1, height: 1) {
-            state "default", icon:"", label: '${currentValue}', action: "bypass1", nextState: "default", backgroundColors: [
-                [value: 0, color: "#ffffff"],
-                [value: 1, color: "#ff0000"],
-                [value: 99, color: "#ff0000"]
-            ]
-        }
-
-        valueTile("zoneStatus2", "device.zoneStatus2", inactiveLabel: false, width: 1, height: 1) {
-            state "default", icon:"", label: '${currentValue}', action: "bypass2", nextState: "default", backgroundColors: [
-                [value: 0, color: "#ffffff"],
-                [value: 1, color: "#ff0000"],
-                [value: 99, color: "#ff0000"]
-            ]
-        }
-
-        valueTile("zoneStatus3", "device.zoneStatus3", inactiveLabel: false, width: 1, height: 1) {
-            state "default", icon:"", label: '${currentValue}', action: "bypass3", nextState: "default", backgroundColors: [
-                [value: 0, color: "#ffffff"],
-                [value: 1, color: "#ff0000"],
-                [value: 99, color: "#ff0000"]
-            ]
-        }
-
-        valueTile("zoneStatus4", "device.zoneStatus4", inactiveLabel: false, width: 1, height: 1) {
-            state "default", icon:"", label: '${currentValue}', action: "bypass4", nextState: "default", backgroundColors: [
-                [value: 0, color: "#ffffff"],
-                [value: 1, color: "#ff0000"],
-                [value: 99, color: "#ff0000"]
-            ]
-        }
-
-        valueTile("zoneStatus5", "device.zoneStatus5", inactiveLabel: false, width: 1, height: 1) {
-            state "default", icon:"", label: '${currentValue}', action: "bypass5", nextState: "default", backgroundColors: [
-                [value: 0, color: "#ffffff"],
-                [value: 1, color: "#ff0000"],
-                [value: 99, color: "#ff0000"]
-            ]
-        }
-
-        valueTile("zoneStatus6", "device.zoneStatus6", inactiveLabel: false, width: 1, height: 1) {
-            state "default", icon:"", label: '${currentValue}', action: "bypass6", nextState: "default", backgroundColors: [
-                [value: 0, color: "#ffffff"],
-                [value: 1, color: "#ff0000"],
-                [value: 99, color: "#ff0000"]
-            ]
-        }
-
-        valueTile("zoneStatus7", "device.zoneStatus7", inactiveLabel: false, width: 1, height: 1) {
-            state "default", icon:"", label: '${currentValue}', action: "bypass7", nextState: "default", backgroundColors: [
-                [value: 0, color: "#ffffff"],
-                [value: 1, color: "#ff0000"],
-                [value: 99, color: "#ff0000"]
-            ]
-        }
-
-        valueTile("zoneStatus8", "device.zoneStatus8", inactiveLabel: false, width: 1, height: 1) {
-            state "default", icon:"", label: '${currentValue}', action: "bypass8", nextState: "default", backgroundColors: [
-                [value: 0, color: "#ffffff"],
-                [value: 1, color: "#ff0000"],
-                [value: 99, color: "#ff0000"]
-            ]
-        }
-
-        valueTile("zoneStatus9", "device.zoneStatus9", inactiveLabel: false, width: 1, height: 1) {
-            state "default", icon:"", label: '${currentValue}', action: "bypass9", nextState: "default", backgroundColors: [
-                [value: 0, color: "#ffffff"],
-                [value: 1, color: "#ff0000"],
-                [value: 99, color: "#ff0000"]
-            ]
-        }
-
-        valueTile("zoneStatus10", "device.zoneStatus10", inactiveLabel: false, width: 1, height: 1) {
-            state "default", icon:"", label: '${currentValue}', action: "bypass10", nextState: "default", backgroundColors: [
-                [value: 0, color: "#ffffff"],
-                [value: 1, color: "#ff0000"],
-                [value: 99, color: "#ff0000"]
-            ]
-        }
-
-        valueTile("zoneStatus11", "device.zoneStatus11", inactiveLabel: false, width: 1, height: 1) {
-            state "default", icon:"", label: '${currentValue}', action: "bypass11", nextState: "default", backgroundColors: [
-                [value: 0, color: "#ffffff"],
-                [value: 1, color: "#ff0000"],
-                [value: 99, color: "#ff0000"]
-            ]
-        }
-
-        valueTile("zoneStatus12", "device.zoneStatus12", inactiveLabel: false, width: 1, height: 1) {
-            state "default", icon:"", label: '${currentValue}', action: "bypass12", nextState: "default", backgroundColors: [
-                [value: 0, color: "#ffffff"],
-                [value: 1, color: "#ff0000"],
-                [value: 99, color: "#ff0000"]
-            ]
-        }
+        //DO_NOT_DELETE_TEMPLATE_ZONE_TILES
 
         standardTile("refresh", "device.refresh", inactiveLabel: false, decoration: "flat", width: 6, height: 2) {
             state "default", action:"refresh.refresh", icon:"st.secondary.refresh"
         }
 
         main(["status"])
-        details(["status", "arm_disarm", "stay_disarm", "panic", "fire", "aux", "zoneStatus1", "zoneStatus2", "zoneStatus3", "zoneStatus4", "zoneStatus5", "zoneStatus6", "zoneStatus7", "zoneStatus8", "zoneStatus9", "zoneStatus10", "zoneStatus11", "zoneStatus12", "refresh"])
+
+        //DO_NOT_DELETE_TEMPLATE_ZONE_DETAILS
     }
 }
 
 /*** Handlers ***/
 
 def installed() {
-    for (def i = 1; i <= 12; i++)
+    for (def i = 1; i <= DO_NOT_DELETE_TEMPLATE_ZONE_LOOP; i++)
         sendEvent(name: "zoneStatus${i}", value: "", displayed: false)
 }
 
@@ -293,7 +159,7 @@ def updated() {
     state.fire_started = null;
     state.aux_started = null;
 
-    for (def i = 1; i <= 12; i++)
+    for (def i = 1; i <= DO_NOT_DELETE_TEMPLATE_ZONE_LOOP; i++)
         sendEvent(name: "zoneStatus${i}", value: "", displayed: false)
 
     // subscribe if settings change
@@ -601,43 +467,7 @@ def checkAux() {
  * bypassN()
  * Bypass the zone indicated on this tile
  */
-def bypass1() {
-    bypassN(1)
-} 
-def bypass2() {
-    bypassN(2)
-}
-def bypass3() {
-    bypassN(3)
-}
-def bypass4() {
-    bypassN(4)
-}
-def bypass5() {
-    bypassN(5)
-}
-def bypass6() {
-    bypassN(6)
-}
-def bypass7() {
-    bypassN(7)
-}
-def bypass8() {
-    bypassN(8)
-}
-def bypass9() {
-    bypassN(9)
-}
-def bypass10() {
-    bypassN(10)
-}
-def bypass11() {
-    bypassN(10)
-}
-def bypass12() {
-    bypassN(10)
-}
-
+//DO_NOT_DELETE_TEMPLATE_ZONE_BYPASS_DEFS
 def bypassN(szValue) {
     def zone = device.currentValue("zoneStatus${szValue}")
     bypass(zone)
@@ -856,7 +686,8 @@ private def build_zone_events(data) {
     //log.trace("Filling zone tiles..")
 
     // Fill zone tiles
-    for (def i = 1; i <= 12; i++) {
+    for (def i = 1; i <= DO_NOT_DELETE_TEMPLATE_ZONE_LOOP; i++)
+    {       
         if (number_of_zones_faulted > 0 && i <= number_of_zones_faulted) {
             if ((device.currentValue("zoneStatus${i}") ?: "0").toInteger() != current_faults[i-1])
                 events << createEvent(name: "zoneStatus${i}", value: current_faults[i-1], displayed: true)
@@ -878,7 +709,8 @@ private def update_zone_switches(zone, faulted) {
     // Iterate through the zone tracker settings.  If the zone number matches,
     // trigger an event for the service manager to use to flip the virtual
     // switches.
-    for (def i = 1; i <= 20; i++) {
+    for (def i = 1; i <= DO_NOT_DELETE_TEMPLATE_ZONE_LOOP; i++)
+    {
         if (zone == settings."zonetracker${i}zone") {
             if (faulted)
                 events << createEvent(name: "zone-on", value: i, isStateChange: true, displayed: false)
