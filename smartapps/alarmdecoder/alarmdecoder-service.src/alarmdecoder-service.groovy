@@ -495,7 +495,6 @@ def initialize() {
 
     // if a device in the GUI is selected then add it.
     if (input_selected_devices) {
-        log.trace "device in gui selected"
         addExistingDevices()
     }
 
@@ -821,12 +820,17 @@ def cidSet(evt) {
  * add a zone during post install to keep it async
  */
 def addZone(evt) {
-
     def i = evt.value
-    log.info("App Event: addZone ${i}")
     
-    try {        
-        def zone_switch = addChildDevice("alarmdecoder", "AlarmDecoder virtual contact sensor", "${evt.data}", state.hub, [name: "${evt.data}", label: "${sname} Zone Sensor #${i}", completedSetup: true])    
+    def zoneName =  "${sname} Zone Sensor #${i}"
+    if (evt.descriptionText?.trim()){
+        zoneName = evt.descriptionText
+    }
+
+    if (debug) log.info("App Event: addZone ${i} (${zoneName})")
+    
+    try {    
+        def zone_switch = addChildDevice("alarmdecoder", "AlarmDecoder virtual contact sensor", "${evt.data}", state.hub, [name: "${evt.data}", label: "${zoneName}", completedSetup: true])    
         def sensorValue = "open"
         if (settings.defaultSensorToClosed == true) {
             sensorValue = "closed"
@@ -932,14 +936,14 @@ def alarmdecoderAlarmHandler(evt) {
  */
 def initSubscriptions() {
     // subscribe to the Smart Home Manager api for alarm status events
-    if (debug) log.debug("initSubscriptions: Subscribe to handlers")
+    if (debug) log.debug("initialize: subscribe to SHM alarmSystemStatus API messages")
     subscribe(location, "alarmSystemStatus", shmAlarmHandler)
+    /* subscribe to local LAN messages to this HUB on TCP port 39500 and UPNP UDP port 1900 */
+    if (debug) log.debug("initialize: subscribe to locations local LAN messages")
+    subscribe(location, null, locationHandler, [filterEvents: false])
 
     // subscribe to add zone handler
-    subscribe(app, addZone)
-
-    /* subscribe to local LAN messages to this HUB on TCP port 39500 and UPNP UDP port 1900 */
-    subscribe(location, null, locationHandler, [filterEvents: false])
+    subscribe(location, "addZone", addZone, [filterEvents: false])   
 }
 
 /**
@@ -1213,29 +1217,11 @@ def parseZoneData(physicalgraph.device.HubResponse hubResponse) {
         json.zones.each
         {
             z ->
-                if(debug) log.debug("Zone (${z.zone_id}) ST ID: ${z.st_id}")
-
                 if (z.st_id != null && z.st_id > 0){
                     def existingSwitch = state.devices.find { k, v -> k == "${state.ip}:${state.port}:switch${z.st_id}" }
 
                     if (!existingSwitch)
-                    {
-                        if(debug) log.debug("Adding ${sname} Zone Sensor #${z.zone_id}")
-
-                        def zoneName =  "${sname} Zone Sensor #${z.zone_id}"
-                        if (z.name?.trim()){
-                            zoneName = z.name
-                        }
-
-                        def zone_switch = addChildDevice("alarmdecoder", "AlarmDecoder virtual contact sensor", "${state.ip}:${state.port}:switch${z.st_id}", state.hub, [name: "${state.ip}:${state.port}:switch${z.st_id}", label: "${zoneName}", completedSetup: true])
-
-                        def sensorValue = "open"
-                        if (settings.defaultSensorToClosed == true)
-                            sensorValue = "closed"
-
-                        // Set default contact state.
-                        zone_switch.sendEvent(name: "contact", value: sensorValue, isStateChange: true, displayed: false)
-                    }
+                        sendLocationEvent(name: "addZone", value: "${z.st_id}", data: "${state.ip}:${state.port}:switch${z.st_id}", descriptionText: "${z.name}")
                 }
         }
     }
